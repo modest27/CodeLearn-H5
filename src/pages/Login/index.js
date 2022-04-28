@@ -29,10 +29,10 @@ export default function Login() {
       })
 
       // 开启倒计时
-      setTime(60)
-      setInterval(() => {
+      setTime(5)
+      let timeId = setInterval(() => {
         // 当我们每次都需要获取最新的状态，需要写成箭头函数的形式
-        let timeId = setTime(time => {
+        setTime(time => {
           if (time === 1) {
             clearInterval(timeId)
           }
