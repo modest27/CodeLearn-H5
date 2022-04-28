@@ -4,10 +4,47 @@ import Input from '@/components/Input'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import classNames from 'classnames'
+import { useDispatch } from 'react-redux'
+import { sendCode } from '@/store/actions/login'
+import { Toast } from 'antd-mobile'
+import { useState } from 'react'
 
 export default function Login() {
-  const onExtraClick = () => {
-    console.log('哈哈')
+  const dispatch = useDispatch()
+  const [time, setTime] = useState(0)
+  const onExtraClick = async () => {
+    if (time > 0) return
+    // 先对手机号进行验证
+    if (!/^1[3-9]\d{9}$/.test(mobile)) {
+      formik.setTouched({
+        mobile: true
+      })
+      return
+    }
+    try {
+      await dispatch(sendCode(mobile))
+      Toast.show({
+        icon: 'success',
+        content: '获取验证码成功'
+      })
+
+      // 开启倒计时
+      setTime(60)
+      setInterval(() => {
+        // 当我们每次都需要获取最新的状态，需要写成箭头函数的形式
+        let timeId = setTime(time => {
+          if (time === 1) {
+            clearInterval(timeId)
+          }
+          return time - 1
+        })
+      }, 1000)
+    } catch (err) {
+      Toast.show({
+        icon: 'fail',
+        content: '获取验证码失败'
+      })
+    }
   }
 
   const formik = useFormik({
@@ -49,7 +86,7 @@ export default function Login() {
             {touched.mobile && errors.mobile ? <div className="validate">{errors.mobile}</div> : null}
           </div>
           <div className="input-item">
-            <Input placeholder="请输入验证码" autoComplete="off" name="code" extra="获取验证码" onExtraClick={onExtraClick} value={code} onChange={handleChange} onBlur={handleBlur} maxLength={6}></Input>
+            <Input placeholder="请输入验证码" autoComplete="off" name="code" extra={time === 0 ? '获取验证码' : time + ' s后获取'} onExtraClick={onExtraClick} value={code} onChange={handleChange} onBlur={handleBlur} maxLength={6}></Input>
             {touched.code && errors.code ? <div className="validate">{errors.code}</div> : null}
           </div>
           {/* 登录按钮 */}
