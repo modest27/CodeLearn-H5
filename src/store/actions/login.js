@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { setTokenInfo } from '@/utils/storage'
 
 // 发送验证码
 export const sendCode = mobile => {
@@ -28,5 +29,7 @@ export const login = data => {
     })
     // 保存token到redux中
     dispatch(saveToken(res.data))
+    // 同时保存到本地
+    setTokenInfo(res.data)
   }
 }
