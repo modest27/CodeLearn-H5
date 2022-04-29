@@ -5,11 +5,13 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import classNames from 'classnames'
 import { useDispatch } from 'react-redux'
-import { sendCode } from '@/store/actions/login'
+import { login, sendCode } from '@/store/actions/login'
 import { Toast } from 'antd-mobile'
 import { useState } from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 export default function Login() {
+  const history = useHistory()
   const dispatch = useDispatch()
   const [time, setTime] = useState(0)
   const onExtraClick = async () => {
@@ -21,39 +23,39 @@ export default function Login() {
       })
       return
     }
-    try {
-      await dispatch(sendCode(mobile))
-      Toast.show({
-        icon: 'success',
-        content: '获取验证码成功'
-      })
 
-      // 开启倒计时
-      setTime(5)
-      let timeId = setInterval(() => {
-        // 当我们每次都需要获取最新的状态，需要写成箭头函数的形式
-        setTime(time => {
-          if (time === 1) {
-            clearInterval(timeId)
-          }
-          return time - 1
-        })
-      }, 1000)
-    } catch (err) {
-      Toast.show({
-        icon: 'fail',
-        content: '获取验证码失败'
+    await dispatch(sendCode(mobile))
+    Toast.show({
+      icon: 'success',
+      content: '获取验证码成功'
+    })
+
+    // 开启倒计时
+    setTime(60)
+    let timeId = setInterval(() => {
+      // 当我们每次都需要获取最新的状态，需要写成箭头函数的形式
+      setTime(time => {
+        if (time === 1) {
+          clearInterval(timeId)
+        }
+        return time - 1
       })
-    }
+    }, 1000)
   }
 
   const formik = useFormik({
     initialValues: {
       mobile: '13911111111',
-      code: '123456'
+      code: '246810'
     },
-    onSubmit: values => {
-      console.log(values)
+    async onSubmit(values) {
+      await dispatch(login(values))
+      Toast.show({
+        icon: 'success',
+        content: '登录成功'
+      })
+      // 跳转到首页
+      history.push('/home')
     },
     validationSchema: Yup.object({
       mobile: Yup.string()
