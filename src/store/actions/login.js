@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { setTokenInfo } from '@/utils/storage'
+import { removeTokenInfo, setTokenInfo } from '@/utils/storage'
 
 // 发送验证码
 export const sendCode = mobile => {
@@ -31,5 +31,17 @@ export const login = data => {
     dispatch(saveToken(res.data))
     // 同时保存到本地
     setTokenInfo(res.data)
+  }
+}
+
+// logout
+export const logout = () => {
+  return dispatch => {
+    // 移除本地token
+    removeTokenInfo()
+    // 移除redux中的token
+    dispatch({
+      type: 'login/logout'
+    })
   }
 }

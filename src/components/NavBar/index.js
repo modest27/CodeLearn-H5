@@ -5,11 +5,15 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 // 方法1： import { withRouter } from 'react-router-dom'
 
-function NavBar({ children, extra }) {
+function NavBar({ children, extra, onLeftClick }) {
   const history = useHistory()
   const back = () => {
     // 返回上一页
-    history.go(-1)
+    if (onLeftClick) {
+      onLeftClick()
+    } else {
+      history.go(-1)
+    }
   }
 
   return (
