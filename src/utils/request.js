@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Toast } from 'antd-mobile'
+import { getTokenInfo } from './storage'
 
 const instance = axios.create({
   timeout: 5000,
@@ -9,6 +10,11 @@ const instance = axios.create({
 // 配置请求拦截器
 instance.interceptors.request.use(
   config => {
+    // 获取token
+    const token = getTokenInfo().token
+    if (token) {
+      config.headers.Authorization = 'Bearer ' + token
+    }
     return config
   },
   err => {
