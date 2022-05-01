@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import styles from './index.module.scss'
 import Icon from '@/components/Icon'
 import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 import { Switch, Route } from 'react-router-dom'
 
-const Home = React.lazy(() => import('@/pages/Home'))
-const QA = React.lazy(() => import('@/pages/QA'))
-const Video = React.lazy(() => import('@/pages/Video'))
-const Profile = React.lazy(() => import('@/pages/Profile'))
+const Home = lazy(() => import('@/pages/Home'))
+const QA = lazy(() => import('@/pages/QA'))
+const Video = lazy(() => import('@/pages/Video'))
+const Profile = lazy(() => import('@/pages/Profile'))
 
 const tabBar = [
   {
@@ -41,12 +41,14 @@ export default function Layout() {
       {/* 区域一：点击按钮切换显示内容的区域 */}
       <div className="tab-content">
         {/* 配置二级路由 */}
-        <Switch>
-          <Route exact path="/home" component={Home}></Route>
-          <Route path="/home/qa" component={QA}></Route>
-          <Route path="/home/video" component={Video}></Route>
-          <Route path="/home/profile" component={Profile}></Route>
-        </Switch>
+        <Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Route exact path="/home" component={Home}></Route>
+            <Route path="/home/qa" component={QA}></Route>
+            <Route path="/home/video" component={Video}></Route>
+            <Route path="/home/profile" component={Profile}></Route>
+          </Switch>
+        </Suspense>
       </div>
       {/* 区域二：按钮区域，会使用固定定位显示在页面底部 */}
       <div className="tabbar">
