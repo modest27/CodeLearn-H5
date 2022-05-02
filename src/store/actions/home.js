@@ -49,3 +49,23 @@ export const saveAllChannels = payload => {
     payload
   }
 }
+
+// 删除频道
+export const delChannel = channel => {
+  return async (dispatch, getState) => {
+    // 判断有无token，有就发送请求删除
+    // 没有token，删除本地
+    // 不管有无token，都删除redux中的数据
+    const userChannels = getState().home.userChannels
+    if (hasToken()) {
+      // 有登录，发请求删，以及删redux
+      await request.delete('/user/channels/' + channel.id)
+      dispatch(saveUserChannels(userChannels.filter(item => item.id !== channel.id)))
+    } else {
+      // 没登录，删redux，删本地
+      const res = userChannels.filter(item => item.id !== channel.id)
+      dispatch(saveUserChannels(res))
+      setLocalChannels(res)
+    }
+  }
+}

@@ -1,5 +1,8 @@
 import Icon from '@/components/Icon'
-import { useSelector } from 'react-redux'
+import { delChannel } from '@/store/actions/home'
+import classNames from 'classnames'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.module.scss'
 
 /**
@@ -8,7 +11,7 @@ import styles from './index.module.scss'
  * @param {Function} props.onClose 关闭频道管理抽屉时的回调函数
  * @param {Function} props.onChannelClick 当点击频道列表中的某个频道时的会带哦函数
  */
-const Channels = ({ tabActiveIndex, onClose, onChannelClick }) => {
+const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
   const userChannels = useSelector(state => state.home.userChannels)
   // 推荐频道
   const recommendChannels = useSelector(state => {
@@ -18,6 +21,25 @@ const Channels = ({ tabActiveIndex, onClose, onChannelClick }) => {
       return userChannels.findIndex(v => v.id === item.id) === -1
     })
   })
+
+  // 切换
+  const changeChannel = i => {
+    // 如果是编辑状态，不允许跳转
+    if (editing) return
+    // 传出去下标高亮
+    onChange(i)
+    onClose()
+  }
+
+  // 编辑状态
+  const [editing, setEditing] = useState(false)
+
+  const dispatch = useDispatch()
+
+  // 删除频道
+  const del = channel => {
+    dispatch(delChannel(channel))
+  }
 
   return (
     <div className={styles.root}>
@@ -29,19 +51,21 @@ const Channels = ({ tabActiveIndex, onClose, onChannelClick }) => {
       {/* 频道列表 */}
       <div className="channel-content">
         {/* 当前已选择的频道列表 */}
-        <div className="channel-item edit">
+        <div className={classNames('channel-item', { edit: editing })}>
           <div className="channel-item-header">
             <span className="channel-item-title">我的频道</span>
-            <span className="channel-item-title-extra">点击删除频道</span>
-            <span className="channel-item-edit">保存</span>
+            <span className="channel-item-title-extra">{editing ? '点击删除频道' : '点击进入频道'}</span>
+            <span className="channel-item-edit" onClick={() => setEditing(!editing)}>
+              {editing ? '保存' : '编辑'}
+            </span>
           </div>
 
           <div className="channel-list">
-            {userChannels.map(item => {
+            {userChannels.map((item, i) => {
               return (
-                <span className="channel-list-item" key={item.id}>
+                <span className={classNames('channel-list-item', { selected: index === i })} key={item.id} onClick={() => changeChannel(i)}>
                   {item.name}
-                  {/* <Icon type="iconbtn_tag_close" /> */}
+                  <Icon type="iconbtn_tag_close" onClick={() => del(item)} />
                 </span>
               )
             })}

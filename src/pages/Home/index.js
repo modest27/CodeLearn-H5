@@ -18,9 +18,14 @@ export default function Home() {
   const onClose = () => {
     setOpen(false)
   }
+
+  // 控制高亮
+  const [active, setActive] = useState(0)
+
+  const changeActive = e => setActive(e)
   return (
     <div className={styles.root}>
-      <Tabs tabs={tabs}></Tabs>
+      <Tabs tabs={tabs} index={active} onChange={changeActive}></Tabs>
       {/* 频道 Tab 栏右侧的两个图标按钮：搜索、频道管理 */}
       <div className="tabs-opration">
         <Icon type="iconbtn_search" />
@@ -28,7 +33,7 @@ export default function Home() {
       </div>
       {/* 频道管理组件 */}
       <Popup visible={open} position="left" bodyStyle={{ width: '100vw' }}>
-        <Channels onClose={onClose}></Channels>
+        <Channels onClose={onClose} index={active} onChange={changeActive}></Channels>
       </Popup>
     </div>
   )
