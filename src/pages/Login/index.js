@@ -56,10 +56,10 @@ export default function Login() {
         content: '登录成功'
       })
       // 跳转到首页
-      if (location.from) {
-        history.push(location.from.pathname)
+      if (location.state) {
+        history.replace(location.state.from)
       } else {
-        history.push('/home')
+        history.replace('/home')
       }
     },
     validationSchema: Yup.object({
