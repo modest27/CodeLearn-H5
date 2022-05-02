@@ -8,6 +8,7 @@ const Home = React.lazy(() => import('@/pages/Layout'))
 const ProfileEdit = React.lazy(() => import('@/pages/Profile/Edit'))
 const ProfileChat = React.lazy(() => import('@/pages/Profile/Chat'))
 const NotFound = React.lazy(() => import('@/pages/NotFound'))
+const ProfileFeedback = React.lazy(() => import('@/pages/Profile/Feedback'))
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/home" component={Home}></Route>
             <AuthRoute path="/profile/edit" component={ProfileEdit}></AuthRoute>
             <AuthRoute path="/profile/chat" component={ProfileChat}></AuthRoute>
+            <AuthRoute path="/profile/feedback" component={ProfileFeedback}></AuthRoute>
             {/* 404页面 */}
             <Route component={NotFound}></Route>
           </Switch>
