@@ -8,9 +8,10 @@ import { useDispatch } from 'react-redux'
 import { login, sendCode } from '@/store/actions/login'
 import { Toast } from 'antd-mobile'
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useHistory, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
 export default function Login() {
+  const location = useLocation()
   const history = useHistory()
   const dispatch = useDispatch()
   const [time, setTime] = useState(0)
@@ -55,7 +56,11 @@ export default function Login() {
         content: '登录成功'
       })
       // 跳转到首页
-      history.push('/home')
+      if (location.from) {
+        history.push(location.from.pathname)
+      } else {
+        history.push('/home')
+      }
     },
     validationSchema: Yup.object({
       mobile: Yup.string()
