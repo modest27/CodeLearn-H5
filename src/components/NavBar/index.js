@@ -2,10 +2,11 @@ import React from 'react'
 import Icon from '@/components/Icon'
 import styles from './index.module.scss'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import classNames from 'classnames'
 
 // 方法1： import { withRouter } from 'react-router-dom'
 
-function NavBar({ children, extra, onLeftClick }) {
+function NavBar({ children, extra, onLeftClick, className }) {
   const history = useHistory()
   const back = () => {
     // 返回上一页
@@ -17,7 +18,7 @@ function NavBar({ children, extra, onLeftClick }) {
   }
 
   return (
-    <div className={styles.root}>
+    <div className={classNames(styles.root, className)}>
       {/* 后退按钮 */}
       <div className="left">
         <Icon type="iconfanhui" onClick={back} />
