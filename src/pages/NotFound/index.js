@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export default function NotFound() {
   const [time, setTime] = useState(3)
   const history = useHistory()
-  const timeRef = useRef()
+  const timeRef = useRef(-1)
   useEffect(() => {
     let timer = setInterval(() => {
       setTime(time => {
