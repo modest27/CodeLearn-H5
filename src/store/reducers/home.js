@@ -1,7 +1,8 @@
-import { SAVE_CHANNELS } from '../action_types/home'
+import { SAVE_CHANNELS, SAVE_ALL_CHANNELS } from '../action_types/home'
 
 const initValue = {
-  userChannels: []
+  userChannels: [],
+  allChannels: []
 }
 export default function reducer(state = initValue, action) {
   const { type, payload } = action
@@ -10,6 +11,11 @@ export default function reducer(state = initValue, action) {
       return {
         ...state,
         userChannels: payload
+      }
+    case SAVE_ALL_CHANNELS:
+      return {
+        ...state,
+        allChannels: payload
       }
     default:
       return state

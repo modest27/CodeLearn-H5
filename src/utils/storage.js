@@ -1,5 +1,6 @@
 // 用户 Token 的本地缓存键名
 const TOKEN_KEY = 'codelearn-h5'
+const CHANNEL_KEY = 'codelearn-h5-channels'
 
 /**
  * 从本地缓存中获取 Token 信息
@@ -28,4 +29,19 @@ export const removeTokenInfo = () => {
  */
 export const hasToken = () => {
   return !!getTokenInfo().token
+}
+
+// 保存频道数据到本地
+export const setLocalChannels = channels => {
+  localStorage.setItem(CHANNEL_KEY, JSON.stringify(channels))
+}
+
+// 获取本地频道数据
+export const getLocalChannels = () => {
+  return JSON.parse(localStorage.getItem(CHANNEL_KEY))
+}
+
+// 删除本地频道数据
+export const removeLocalChannels = () => {
+  localStorage.removeItem(CHANNEL_KEY)
 }
