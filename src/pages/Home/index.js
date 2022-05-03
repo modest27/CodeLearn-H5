@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.module.scss'
 import Channels from './components/channels'
 import ArticleList from './components/ArticleList/idnex'
+import MoreAction from './components/MoreAction'
 
 export default function Home() {
   const tabs = useSelector(state => state.home.userChannels)
@@ -41,6 +42,8 @@ export default function Home() {
       <Popup visible={open} position="left" bodyStyle={{ width: '100vw' }}>
         <Channels onClose={onClose} index={active} onChange={changeActive}></Channels>
       </Popup>
+      {/* 举报弹层 */}
+      <MoreAction></MoreAction>
     </div>
   )
 }

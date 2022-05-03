@@ -5,6 +5,7 @@ import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './index.module.scss'
 import Img from '@/components/Img'
+import { useSelector } from 'react-redux'
 
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
@@ -27,6 +28,8 @@ const ArticleItem = ({ article }) => {
     comm_count,
     pubdate
   } = article
+
+  const isLogin = useSelector(state => !!state.login.token)
 
   return (
     <div className={styles.root}>
@@ -53,9 +56,7 @@ const ArticleItem = ({ article }) => {
         <span>{aut_name}</span>
         <span>{comm_count} 评论</span>
         <span>{dayjs().from(pubdate)}</span>
-        <span className="close">
-          <Icon type="iconbtn_essay_close" />
-        </span>
+        <span className="close">{isLogin && <Icon type="iconbtn_essay_close" />}</span>
       </div>
     </div>
   )
