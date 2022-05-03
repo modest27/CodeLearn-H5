@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './index.module.scss'
+import Img from '@/components/Img'
 
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
@@ -39,7 +40,7 @@ const ArticleItem = ({ article }) => {
             {images.map((image, i) => {
               return (
                 <div className="article-img-wrapper" key={i}>
-                  <img src={image} alt="" />
+                  <Img src={image} alt="" />
                 </div>
               )
             })}
