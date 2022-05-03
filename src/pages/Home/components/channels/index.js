@@ -1,5 +1,6 @@
 import Icon from '@/components/Icon'
-import { delChannel } from '@/store/actions/home'
+import { addChannel, delChannel } from '@/store/actions/home'
+import { Toast } from 'antd-mobile'
 import classNames from 'classnames'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -37,8 +38,27 @@ const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
   const dispatch = useDispatch()
 
   // 删除频道
-  const del = channel => {
+  const del = (channel, i) => {
+    if (userChannels.length <= 4) {
+      Toast.show({ content: '至少保留4个频道哦' })
+      return
+    }
     dispatch(delChannel(channel))
+    // 高亮处理
+    // 1.如果删除的i和index相等，默认让第一个高亮
+    // 2.如果删除的i小于index，就让i-1高亮
+    // 3.如果删除的i大于index，就不处理
+    if (i < index) {
+      onChange(index - 1)
+    } else if (i === index) {
+      onChange(0)
+    }
+  }
+
+  // 添加频道
+  const add = async channel => {
+    await dispatch(addChannel(channel))
+    Toast.show({ icon: 'success', content: '添加成功' })
   }
 
   return (
@@ -65,7 +85,7 @@ const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
               return (
                 <span className={classNames('channel-list-item', { selected: index === i })} key={item.id} onClick={() => changeChannel(i)}>
                   {item.name}
-                  <Icon type="iconbtn_tag_close" onClick={() => del(item)} />
+                  {item.id !== 0 && <Icon type="iconbtn_tag_close" onClick={() => del(item, i)} />}
                 </span>
               )
             })}
@@ -81,7 +101,7 @@ const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
           <div className="channel-list">
             {recommendChannels.map(item => {
               return (
-                <span className="channel-list-item" key={item.id}>
+                <span className="channel-list-item" key={item.id} onClick={() => add(item)}>
                   + {item.name}
                 </span>
               )

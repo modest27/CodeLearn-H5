@@ -69,3 +69,19 @@ export const delChannel = channel => {
     }
   }
 }
+
+// 添加频道
+export const addChannel = channel => {
+  return async (dispatch, getState) => {
+    const channels = [...getState().home.userChannels, channel]
+    if (hasToken()) {
+      // 登录了，发请求添加
+      await request.patch('/user/channels', { channels: [channel] })
+      dispatch(saveUserChannels(channels))
+    } else {
+      // 没有登录，存redux和本地
+      dispatch(saveUserChannels(channels))
+      setLocalChannels(channels)
+    }
+  }
+}
