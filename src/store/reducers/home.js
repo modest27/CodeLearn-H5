@@ -19,13 +19,16 @@ export default function reducer(state = initValue, action) {
         allChannels: payload
       }
     case SAVE_ARTICLE_LIST:
+      const { channelId, list, timestamp, loadMore } = payload
+
       return {
         ...state,
         articles: {
           ...state.articles,
-          [payload.channelId]: {
-            timestamp: payload.timestamp,
-            list: payload.list
+          [channelId]: {
+            timestamp,
+            // 如果是loadMore就追加数据，前半部分表示旧数据，否则就覆盖数据
+            list: loadMore ? [...state.articles[channelId].list, ...list] : list
           }
         }
       }
