@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.module.scss'
 import Channels from './components/channels'
+import ArticleList from './components/ArticleList/idnex'
 
 export default function Home() {
   const tabs = useSelector(state => state.home.userChannels)
@@ -25,7 +26,12 @@ export default function Home() {
   const changeActive = e => setActive(e)
   return (
     <div className={styles.root}>
-      <Tabs tabs={tabs} index={active} onChange={changeActive}></Tabs>
+      <Tabs tabs={tabs} index={active} onChange={changeActive}>
+        {/* 放对应数量的ArticleList */}
+        {tabs.map(item => {
+          return <ArticleList key={item.id} channelId={item.id} articleId={tabs[active].id}></ArticleList>
+        })}
+      </Tabs>
       {/* 频道 Tab 栏右侧的两个图标按钮：搜索、频道管理 */}
       <div className="tabs-opration">
         <Icon type="iconbtn_search" />

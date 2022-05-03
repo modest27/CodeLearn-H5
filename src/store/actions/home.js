@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { SAVE_CHANNELS, SAVE_ALL_CHANNELS } from '@/store/action_types/home'
+import { SAVE_CHANNELS, SAVE_ALL_CHANNELS, SAVE_ARTICLE_LIST } from '@/store/action_types/home'
 import { getLocalChannels, hasToken, setLocalChannels } from '@/utils/storage'
 
 // 获取用户的频道
@@ -83,5 +83,34 @@ export const addChannel = channel => {
       dispatch(saveUserChannels(channels))
       setLocalChannels(channels)
     }
+  }
+}
+
+// 获取文章列表数据
+export const getArticleList = (channelId, timestamp) => {
+  return async dispatch => {
+    const res = await request({
+      method: 'GET',
+      url: '/articles',
+      params: {
+        channel_id: channelId,
+        timestamp: timestamp
+      }
+    })
+    dispatch(
+      setArticleList({
+        channelId,
+        timestamp: res.data.pre_timestamp,
+        list: res.data.results
+      })
+    )
+  }
+}
+
+// 保存文章列表
+export const setArticleList = payload => {
+  return {
+    type: SAVE_ARTICLE_LIST,
+    payload
   }
 }
