@@ -5,15 +5,19 @@ const CHANNEL_KEY = 'codelearn-h5-channels'
 /**
  * 从本地缓存中获取 Token 信息
  */
-export const getTokenInfo = () => {
-  return JSON.parse(localStorage.getItem(TOKEN_KEY)) || {}
+export const getTokenInfo = ():Token => {
+  return JSON.parse(localStorage.getItem(TOKEN_KEY) as string ) || {}
 }
 
 /**
  * 将 Token 信息存入缓存
  * @param {Object} tokenInfo 从后端获取到的 Token 信息
  */
-export const setTokenInfo = tokenInfo => {
+ type Token = {
+  token: string
+  refresh_token:string
+}
+export const setTokenInfo = (tokenInfo:Token) => {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(tokenInfo))
 }
 
@@ -32,13 +36,17 @@ export const hasToken = () => {
 }
 
 // 保存频道数据到本地
-export const setLocalChannels = channels => {
+type Channels = {
+  id: number
+  name:string
+}[]
+export const setLocalChannels = (channels:Channels) => {
   localStorage.setItem(CHANNEL_KEY, JSON.stringify(channels))
 }
 
 // 获取本地频道数据
-export const getLocalChannels = () => {
-  return JSON.parse(localStorage.getItem(CHANNEL_KEY))
+export const getLocalChannels = ():Channels => {
+  return JSON.parse(localStorage.getItem(CHANNEL_KEY)!)
 }
 
 // 删除本地频道数据

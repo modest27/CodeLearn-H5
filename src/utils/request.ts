@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { Toast } from 'antd-mobile'
 import { getTokenInfo, setTokenInfo } from './storage'
 import history from './history'
@@ -17,7 +17,7 @@ instance.interceptors.request.use(
     // 获取token
     const token = getTokenInfo().token
     if (token) {
-      config.headers.Authorization = 'Bearer ' + token
+      config.headers!.Authorization = 'Bearer ' + token
     }
     return config
   },
@@ -31,7 +31,7 @@ instance.interceptors.response.use(
   response => {
     return response.data
   },
-  async err => {
+  async (err:AxiosError<{message:string}>) => {
     // 网络问题，没有response
     if (!err.response) {
       Toast.show({
