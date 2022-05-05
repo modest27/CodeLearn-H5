@@ -1,4 +1,5 @@
 import Icon from '@/components/Icon'
+import { RootState } from '@/store'
 import { getUser } from '@/store/actions/profile'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,7 +9,7 @@ import styles from './index.module.scss'
 const Profile = () => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const user = useSelector(state => state.profile.user)
+  const user = useSelector((state:RootState) => state.profile.user)
   // 页面进入，就需要发送请求获取用户信息
   useEffect(() => {
     dispatch(getUser())
