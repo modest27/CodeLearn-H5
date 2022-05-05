@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import styles from './index.module.scss'
 import classNames from 'classnames'
-export default function Input({ onExtraClick, extra, className, ...rest }) {
+
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  className?: string
+  extra?: string
+  onExtraClick?: () => void
+  type?:'text'|'password'
+}
+export default function Input({ onExtraClick, extra, className, ...rest }:Props) {
   return (
     <div className={styles.root}>
       <input {...rest} className={classNames('input', className)} />
