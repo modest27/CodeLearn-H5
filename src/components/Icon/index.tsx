@@ -1,16 +1,17 @@
 import React from 'react'
 import classNames from 'classnames'
-import PropTypes from 'prop-types'
 
-function Icon({ type, className, ...rest }) {
+type Props = {
+  type: string
+  className?: string
+  onClick?:()=>void
+}
+function Icon({ type, className, ...rest }:Props) {
   return (
     <svg {...rest} className={classNames('icon', className)} aria-hidden="true">
       <use xlinkHref={`#${type}`}></use>
     </svg>
   )
-}
-Icon.propTypes = {
-  type: PropTypes.string.isRequired
 }
 
 export default Icon

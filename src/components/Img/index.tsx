@@ -8,7 +8,11 @@ import styles from './index.module.scss'
  * @param {String} props.src 图片地址
  * @param {String} props.className 样式类
  */
-const Image = ({ src, className }) => {
+type Props = {
+  src: string
+  className?:string
+}
+const Image = ({ src, className }:Props) => {
   // 记录图片加载是否出错的状态
   const [isError, setIsError] = useState(false)
 
@@ -16,18 +20,19 @@ const Image = ({ src, className }) => {
   const [isLoading, setIsLoading] = useState(true)
 
   // 对图片元素的引用
-  const imgRef = useRef(null)
+  const imgRef = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
+    const current = imgRef.current!
     const observe = new IntersectionObserver(function ([{ isIntersecting }]) {
       if (isIntersecting) {
         // 图片在可视区
-        imgRef.current.src = imgRef.current.dataset.src
+        current.src = current.dataset.src!
         // 取消监听
-        observe.unobserve(imgRef.current)
+        observe.unobserve(current)
       }
     })
-    observe.observe(imgRef.current)
+    observe.observe(current)
   }, [])
 
   return (
