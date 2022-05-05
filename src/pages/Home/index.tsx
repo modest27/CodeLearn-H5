@@ -8,9 +8,10 @@ import styles from './index.module.scss'
 import Channels from './components/channels'
 import ArticleList from './components/ArticleList/idnex'
 import MoreAction from './components/MoreAction'
+import {RootState} from '@/store'
 
 export default function Home() {
-  const tabs = useSelector(state => state.home.userChannels)
+  const tabs = useSelector((state:RootState) => state.home.userChannels)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getUserChannels())
@@ -24,14 +25,13 @@ export default function Home() {
   // 控制高亮
   const [active, setActive] = useState(0)
 
-  const changeActive = e => setActive(e)
+  const changeActive = (e:number) => setActive(e)
   return (
     <div className={styles.root}>
       <Tabs tabs={tabs} index={active} onChange={changeActive}>
         {/* 放对应数量的ArticleList */}
-        {tabs.map(item => {
-          return <ArticleList key={item.id} channelId={item.id} articleId={tabs[active].id}></ArticleList>
-        })}
+        {tabs.map(item => <ArticleList key={item.id} channelId={item.id} articleId={tabs[active].id}></ArticleList>
+        )}
       </Tabs>
       {/* 频道 Tab 栏右侧的两个图标按钮：搜索、频道管理 */}
       <div className="tabs-opration">

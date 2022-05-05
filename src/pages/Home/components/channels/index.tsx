@@ -5,6 +5,9 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.module.scss'
+import {RootState} from '@/store'
+import { Channel } from '@/store/reducers/home'
+
 
 /**
  * 频道管理组件
@@ -12,10 +15,15 @@ import styles from './index.module.scss'
  * @param {Function} props.onClose 关闭频道管理抽屉时的回调函数
  * @param {Function} props.onChannelClick 当点击频道列表中的某个频道时的会带哦函数
  */
-const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
-  const userChannels = useSelector(state => state.home.userChannels)
+type Props = {
+  onClose: () => void
+  index: number
+  onChange:(e: number) => void
+}
+const Channels = ({ onClose, onChange, index }:Props) => {
+  const userChannels = useSelector((state:RootState) => state.home.userChannels)
   // 推荐频道
-  const recommendChannels = useSelector(state => {
+  const recommendChannels = useSelector((state:RootState) => {
     const { userChannels, allChannels } = state.home
     return allChannels.filter(item => {
       // 如果在用户频道里有的就不要
@@ -24,7 +32,7 @@ const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
   })
 
   // 切换
-  const changeChannel = i => {
+  const changeChannel = (i:number) => {
     // 如果是编辑状态，不允许跳转
     if (editing) return
     // 传出去下标高亮
@@ -38,7 +46,7 @@ const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
   const dispatch = useDispatch()
 
   // 删除频道
-  const del = (channel, i) => {
+  const del = (channel:Channel, i:number) => {
     if (userChannels.length <= 4) {
       Toast.show({ content: '至少保留4个频道哦' })
       return
@@ -56,7 +64,7 @@ const Channels = ({ tabActiveIndex, onClose, onChange, index }) => {
   }
 
   // 添加频道
-  const add = async channel => {
+  const add = async (channel:Channel) => {
     await dispatch(addChannel(channel))
     Toast.show({ icon: 'success', content: '添加成功' })
   }

@@ -6,6 +6,8 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './index.module.scss'
 import Img from '@/components/Img'
 import { useSelector } from 'react-redux'
+import {RootState} from '@/store'
+
 
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
@@ -20,7 +22,7 @@ dayjs.extend(relativeTime)
  * @param {Number} commentCount 回复数
  * @param {String} publishDate 发布日期
  */
-const ArticleItem = ({ article }) => {
+const ArticleItem = ({ article }:any) => {
   const {
     cover: { type, images },
     title,
@@ -29,7 +31,7 @@ const ArticleItem = ({ article }) => {
     pubdate
   } = article
 
-  const isLogin = useSelector(state => !!state.login.token)
+  const isLogin = useSelector((state:RootState) => !!state.login.token)
 
   return (
     <div className={styles.root}>
@@ -40,10 +42,10 @@ const ArticleItem = ({ article }) => {
         {/* 封面图 */}
         {type !== 0 && (
           <div className="article-imgs">
-            {images.map((image, i) => {
+            {images.map((image:any, i:number) => {
               return (
                 <div className="article-img-wrapper" key={i}>
-                  <Img src={image} alt="" />
+                  <Img src={image}  />
                 </div>
               )
             })}

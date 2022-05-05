@@ -4,15 +4,21 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getArticleList } from '@/store/actions/home'
 import { PullToRefresh, InfiniteScroll } from 'antd-mobile'
+import {RootState} from '@/store'
+
 
 /**
  * 文章列表组件
  * @param {String} props.channelId 当前文章列表所对应的频道ID
  * @param {String} props.aid 当前 Tab 栏选中的频道ID
  */
-const ArticleList = ({ channelId, articleId }) => {
+type Props = {
+  channelId: number
+  articleId:number
+}
+const ArticleList = ({ channelId, articleId }:Props) => {
   const dispatch = useDispatch()
-  const current = useSelector(state => state.home.articles[channelId])
+  const current = useSelector((state:RootState) => state.home.articles[channelId])
   const [hasMore, setHasMore] = useState(true)
 
   // 上拉加载
@@ -29,7 +35,7 @@ const ArticleList = ({ channelId, articleId }) => {
     // 如果该频道有文章数据就不用发请求
     if (current) return
     if (channelId === articleId) {
-      dispatch(getArticleList(channelId, Date.now()))
+      dispatch(getArticleList(channelId, Date.now()+''))
     }
   }, [channelId, articleId, dispatch, current])
   // 如果点击的不是当前列表，就不渲染
@@ -39,7 +45,7 @@ const ArticleList = ({ channelId, articleId }) => {
   const onRefresh = async () => {
     // 重置为有最新数据状态
     setHasMore(true)
-    await dispatch(getArticleList(channelId, Date.now()))
+    await dispatch(getArticleList(channelId, Date.now()+''))
   }
 
   return (
@@ -52,7 +58,8 @@ const ArticleList = ({ channelId, articleId }) => {
                 <ArticleItem article={item}></ArticleItem>{' '}
               </div>
             )
-          })}
+  })
+}
         </PullToRefresh>
         {/* 上拉加载更多 */}
         <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
