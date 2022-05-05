@@ -8,10 +8,11 @@ import { useDispatch } from 'react-redux'
 import { login, sendCode } from '@/store/actions/login'
 import { Toast } from 'antd-mobile'
 import { useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
+import { useHistory, useLocation } from 'react-router-dom'
 
 export default function Login() {
-  const location = useLocation()
+  // useLocation也需要泛型，用于指定state的类型
+  const location = useLocation<{from:string}>()
   const history = useHistory()
   const dispatch = useDispatch()
   const [time, setTime] = useState(0)

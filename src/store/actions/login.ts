@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 import { removeTokenInfo, setTokenInfo } from '@/utils/storage'
+import {Dispatch} from 'redux'
 
 // 发送验证码
-export const sendCode = mobile => {
+export const sendCode = (mobile:string) => {
   return async () => {
     // 发送请求
     await request({
@@ -12,7 +13,11 @@ export const sendCode = mobile => {
   }
 }
 
-export const saveToken = payload => {
+type Token = {
+  token: string
+  refresh_token:string
+}
+export const saveToken = (payload:Token) => {
   return {
     type: 'login/token',
     payload
@@ -20,8 +25,8 @@ export const saveToken = payload => {
 }
 
 // 登录
-export const login = data => {
-  return async dispatch => {
+export const login = (data: { mobile: string; code:string}) => {
+  return async (dispatch:Dispatch) => {
     const res = await request({
       method: 'POST',
       url: '/authorizations',
@@ -36,7 +41,7 @@ export const login = data => {
 
 // logout
 export const logout = () => {
-  return dispatch => {
+  return (dispatch:Dispatch) => {
     // 移除本地token
     removeTokenInfo()
     // 移除redux中的token
