@@ -7,6 +7,8 @@ export default function NotFound() {
   const history = useHistory()
   const timeRef = useRef(-1)
   useEffect(() => {
+    // 在ts中，使用定时器的时候，ts会默认将定时器认为是node中的定时器，而不是浏览器中的，以后注意timer不能定义为number
+    // 以后使用定时器，我们推荐使用 window.setInterval 来明确指明
     let timer = setInterval(() => {
       setTime(time => {
         timeRef.current = time - 1
