@@ -3,7 +3,7 @@ type Token = {
   refresh_token:string
 }
 
-type ActionType = {
+export type LoginAction = {
   type: 'login/token'|'login/logout'
   payload:Token
 } 
@@ -13,7 +13,7 @@ const initValue:Token = {
   refresh_token: ''
 }
 
-export default function reducer(state = initValue, action:ActionType) {
+export default function reducer(state = initValue, action:LoginAction) {
   const { type, payload } = action
   if (type === 'login/token') {
     return payload

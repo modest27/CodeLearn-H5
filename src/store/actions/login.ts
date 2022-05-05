@@ -1,6 +1,7 @@
 import request from '@/utils/request'
-import { removeTokenInfo, setTokenInfo } from '@/utils/storage'
-import {Dispatch} from 'redux'
+import {  setTokenInfo } from '@/utils/storage'
+import { Dispatch } from 'redux'
+import {LoginAction} from '../reducers/login'
 
 // 发送验证码
 export const sendCode = (mobile:string) => {
@@ -17,7 +18,7 @@ type Token = {
   token: string
   refresh_token:string
 }
-export const saveToken = (payload:Token) => {
+export const saveToken = (payload:Token):LoginAction => {
   return {
     type: 'login/token',
     payload
@@ -40,13 +41,9 @@ export const login = (data: { mobile: string; code:string}) => {
 }
 
 // logout
-export const logout = () => {
-  return (dispatch:Dispatch) => {
-    // 移除本地token
-    removeTokenInfo()
-    // 移除redux中的token
-    dispatch({
-      type: 'login/logout'
-    })
+export const logout = (payload:Token) => {
+  return {
+    type: 'login/logout' as const,
+    payload
   }
-}
+  }

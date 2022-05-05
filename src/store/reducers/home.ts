@@ -1,9 +1,9 @@
-type Channel = {
+export type Channel = {
   id: number
   name:string
 }
 
-type Article = {
+export type Article = {
   art_id: string
   title: string
   aut_id: string
@@ -16,7 +16,14 @@ type Article = {
   }
 }
 
-type Articles = {
+export type ArticlePayload = {
+  channelId: number;
+  timestamp: string;
+  list: Article[];
+  loadMore: boolean;
+}
+
+export type Articles = {
   [index: number]: {
     timestamp: string
     list:Article[]
@@ -29,7 +36,7 @@ type HomeType = {
   articles:Articles
 }
 
-type ActionType = {
+export type HomeAction = {
   type: 'home/saveChannels'
   payload:Channel[]
 } | {
@@ -51,7 +58,7 @@ const initValue:HomeType = {
   articles: {} // 存储所有文章列表
 } as HomeType
 
-export default function reducer(state = initValue, action:ActionType) {
+export default function reducer(state = initValue, action:HomeAction) {
   // const { type, payload } = action
   switch (action.type) {
     case 'home/saveChannels':

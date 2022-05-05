@@ -1,10 +1,11 @@
 import request from '@/utils/request'
-import { SAVE_CHANNELS, SAVE_ALL_CHANNELS, SAVE_ARTICLE_LIST } from '@/store/action_types/home'
 import { getLocalChannels, hasToken, setLocalChannels } from '@/utils/storage'
+import { ArticlePayload, Channel, HomeAction } from '../reducers/home'
+import {RooteThunkAction} from '../index'
 
 // 获取用户的频道
-export const getUserChannels = () => {
-  return async dispatch => {
+export const getUserChannels = ():RooteThunkAction => {
+  return async (dispatch) => {
     // 1.判断用户是否登录
     if (hasToken()) {
       const res = await request.get('/user/channels')
@@ -27,31 +28,31 @@ export const getUserChannels = () => {
 }
 
 // 保存用户频道到redux中
-export const saveUserChannels = payload => {
+export const saveUserChannels = (payload:Channel[]):HomeAction => {
   return {
-    type: SAVE_CHANNELS,
+    type: 'home/saveChannels',
     payload
   }
 }
 
 // 获取所有频道数据
-export const getAllChannels = () => {
-  return async dispatch => {
+export const getAllChannels = ():RooteThunkAction => {
+  return async (dispatch) => {
     const res = await request.get('/channels')
     dispatch(saveAllChannels(res.data.channels))
   }
 }
 
 // 保存所有频道到redux中
-export const saveAllChannels = payload => {
+export const saveAllChannels = (payload:Channel[]):HomeAction => {
   return {
-    type: SAVE_ALL_CHANNELS,
+    type: 'home/saveAllChannels',
     payload
   }
 }
 
 // 删除频道
-export const delChannel = channel => {
+export const delChannel = (channel:Channel):RooteThunkAction => {
   return async (dispatch, getState) => {
     // 判断有无token，有就发送请求删除
     // 没有token，删除本地
@@ -71,7 +72,7 @@ export const delChannel = channel => {
 }
 
 // 添加频道
-export const addChannel = channel => {
+export const addChannel = (channel:Channel):RooteThunkAction => {
   return async (dispatch, getState) => {
     const channels = [...getState().home.userChannels, channel]
     if (hasToken()) {
@@ -87,8 +88,8 @@ export const addChannel = channel => {
 }
 
 // 获取文章列表数据
-export const getArticleList = (channelId, timestamp, loadMore = false) => {
-  return async dispatch => {
+export const getArticleList = (channelId:number, timestamp:string, loadMore = false):RooteThunkAction => {
+  return async (dispatch) => {
     const res = await request({
       method: 'GET',
       url: '/articles',
@@ -110,9 +111,9 @@ export const getArticleList = (channelId, timestamp, loadMore = false) => {
 }
 
 // 保存文章列表
-export const setArticleList = payload => {
+export const setArticleList = (payload:ArticlePayload):HomeAction => {
   return {
-    type: SAVE_ARTICLE_LIST,
+    type: '/home/saveArticleList',
     payload
   }
 }

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import { Toast } from 'antd-mobile'
-import { getTokenInfo, setTokenInfo } from './storage'
+import { getTokenInfo, removeTokenInfo, setTokenInfo } from './storage'
 import history from './history'
 import store from '@/store'
 import { logout, saveToken } from '@/store/actions/login'
@@ -86,7 +86,12 @@ instance.interceptors.response.use(
       return instance(config)
     } catch (err) {
       // 刷新token失败,刷新token过期
-      store.dispatch(logout())
+      // 移除本地token
+      removeTokenInfo()
+      store.dispatch(logout({
+        token: '',
+        refresh_token:''
+      }))
       // 跳到登录页
       history.push({
         pathname: '/login',
