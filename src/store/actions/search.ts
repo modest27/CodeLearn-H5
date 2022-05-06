@@ -2,9 +2,17 @@ import request from '@/utils/request'
 import { RooteThunkAction } from '@/store'
 import { SearchAction } from '../reducers/search'
 import { removeLocalHistories, setLocalHistories } from '@/utils/storage'
+import { Article } from '../reducers/home'
 
 type SuggestListRes = {
   options:string[]
+}
+
+type ResultRes = {
+  page: number
+  per_page: number
+  results: Article[]
+  total_count:number
 }
 
 // 获取推荐列表
@@ -61,6 +69,23 @@ export const clearHistories = ():RooteThunkAction => {
     // 清空redux
     dispatch({
       type:'search/clearHistories'
+    })
+  }
+}
+
+// 获取搜索结果的数据
+export const getSearchResult = (keyword:string,page:number):RooteThunkAction => {
+  return async dispatch => {
+    const res = await request.get<ResultRes>('/search', {
+      params:{
+        q:keyword,
+        page,
+        per_page:10
+      }
+    })
+    dispatch({
+      type: 'search/saveResults',
+      payload:res.data.results
     })
   }
 }

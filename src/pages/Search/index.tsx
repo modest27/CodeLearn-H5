@@ -62,6 +62,8 @@ const Search = () => {
   const onSearch = (key:string) => {
     if(!key) return
     dispatch(addSearchList(key))
+    // 跳转到搜索页面
+    history.push('/search/result?key='+key)
   }
 
   // 清空全部历史记录
