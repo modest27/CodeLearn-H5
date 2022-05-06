@@ -7,7 +7,7 @@ import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
-import { getSuggestList } from '@/store/actions/search'
+import { getSuggestList,clearSuggestions } from '@/store/actions/search'
 import { RootState } from '@/store'
 
 
@@ -15,7 +15,9 @@ const Search = () => {
   const history = useHistory()
   const [keyword, setKeyword] = useState('')
   const dispatch = useDispatch()
-  const suggestions = useSelector((state:RootState)=>state.search.suggestions)
+  const suggestions = useSelector((state: RootState) => state.search.suggestions)
+  // 是否显示搜索
+  const [isSearching,setIsSeaarching] = useState(false)
   
   let timerRef = useRef(-1)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +25,12 @@ const Search = () => {
     setKeyword(text)
     clearTimeout(timerRef.current)
     timerRef.current = window.setTimeout(() => {
+      if (text) {
+        setIsSeaarching(true)
       dispatch(getSuggestList(text))
+      } else {
+        setIsSeaarching(false)
+      }
     },500)
   }
 
@@ -38,6 +45,16 @@ const Search = () => {
     return str.replace(new RegExp(key, 'gi'), (match: string) => {
       return `<span style="color:red;">${match}</span>`
     })
+  }
+
+  // 清空搜索联想
+  const onClear = () => {
+    // 清空搜索关键字
+    setKeyword('')
+    // 设置搜索状态
+    setIsSeaarching(false)
+    // 清空redux内容
+    dispatch(clearSuggestions())
   }
 
   return (
@@ -58,13 +75,13 @@ const Search = () => {
             <input type="text" placeholder="请输入关键字搜索" value={keyword} onChange={onChange} />
 
             {/* 清空输入框按钮 */}
-            <Icon type="iconbtn_tag_close" className="icon-close" />
+            <Icon type="iconbtn_tag_close" className="icon-close" onClick={onClear} />
           </div>
         </div>
       </NavBar>
 
       {/* 搜索历史 */}
-      <div className="history" style={{ display: 'block' }}>
+      <div className="history" style={{ display: isSearching? 'none':'block' }}>
         <div className="history-header">
           <span>搜索历史</span>
           <span>
@@ -89,7 +106,7 @@ const Search = () => {
       </div>
 
       {/* 搜素建议结果列表 */}
-      <div className={classnames('search-result', 'show')}>
+      <div className={classnames('search-result', {show:isSearching})}>
         {suggestions.map((item, index) => {
           return  <div className="result-item" key={index}>
           <Icon className="icon-search" type="iconbtn_search" />

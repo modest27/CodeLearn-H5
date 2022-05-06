@@ -1,5 +1,3 @@
-
-
 type SearchType = {
   suggestions:string[]
 }
@@ -7,6 +5,8 @@ type SearchType = {
 export type SearchAction = {
   type: 'search/saveSuggestions',
   payload:string[]
+} | {
+  type:'search/clearSuggestions'
 }
 
 const initValue:SearchType = {
@@ -19,6 +19,12 @@ export default function reducer(state = initValue, action: SearchAction) {
     return {
       ...state,
       suggestions:action.payload
+    }
+  }
+  if (action.type === 'search/clearSuggestions') {
+    return {
+      ...state,
+      suggestions:[]
     }
   }
     

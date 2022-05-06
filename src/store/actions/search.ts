@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import { RooteThunkAction } from '@/store'
+import { SearchAction } from '../reducers/search'
 
 type SuggestListRes = {
   options:string[]
@@ -18,5 +19,12 @@ export function getSuggestList(keyword:string):RooteThunkAction {
       payload: options
     })
 
+  }
+}
+
+// 清空搜索建议内容
+export function clearSuggestions():SearchAction{
+  return {
+    type:'search/clearSuggestions'
   }
 }
