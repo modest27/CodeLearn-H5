@@ -8,6 +8,7 @@ import { ThunkAction } from 'redux-thunk'
 import { HomeAction } from './reducers/home'
 import { LoginAction } from './reducers/login'
 import { ProfileAction } from './reducers/profile'
+import { SearchAction } from './reducers/search'
 
 
 // 参数1 reducer，参数2 store初始值， 参数3 指定中间件
@@ -17,7 +18,7 @@ const store = createStore(reducer, { login: getTokenInfo() }, composeWithDevTool
 export type RootState = ReturnType<typeof store.getState>
 
 // ThunkAction<R,S,E,A>
-type RootAction =  HomeAction | LoginAction | ProfileAction
+type RootAction =  HomeAction | LoginAction | ProfileAction | SearchAction
 export type RooteThunkAction = ThunkAction<Promise<void>,RootState,unknown,RootAction>
 
 export default store
