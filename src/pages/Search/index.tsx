@@ -15,7 +15,7 @@ const Search = () => {
   const history = useHistory()
   const [keyword, setKeyword] = useState('')
   const dispatch = useDispatch()
-  const suggestions = useSelector((state: RootState) => state.search.suggestions)
+  const {suggestions,histories} = useSelector((state: RootState) => state.search)
   // 是否显示搜索
   const [isSearching,setIsSeaarching] = useState(false)
   
@@ -59,7 +59,7 @@ const Search = () => {
 
   // 搜索
   const onSearch = (key:string) => {
-    console.log(key);
+    if(!key) return
     dispatch(addSearchList(key))
   }
 
@@ -96,18 +96,13 @@ const Search = () => {
         </div>
 
         <div className="history-list">
-          <span className="history-item">
-            Python生成九宫格图片<span className="divider"></span>
+          {histories.map((item, index) => {
+            return  <span className="history-item" key={index} onClick={()=>onSearch(item)}>
+              { item}<span className="divider"></span>
           </span>
-          <span className="history-item">
-            Python<span className="divider"></span>
-          </span>
-          <span className="history-item">
-            CSS<span className="divider"></span>
-          </span>
-          <span className="history-item">
-            数据分析<span className="divider"></span>
-          </span>
+          })}
+         
+        
         </div>
       </div>
 

@@ -35,8 +35,14 @@ export function addSearchList(keyword: string): RooteThunkAction{
   return async (dispatch,getState) => {
     // 获取原来的历史记录
     let histories = getState().search.histories
+    // 1.不允许有重复的历史记录，先删除原来有的
+    histories = histories.filter(item=>item!==keyword)
     // 添加keyword
     histories = [keyword, ...histories]
+    // 2.不允许数组长度超过10
+    if (histories.length > 10) {
+      histories = histories.slice(0,10)
+    }
     // 保存到redux
     dispatch({
       type: 'search/saveHistories',
