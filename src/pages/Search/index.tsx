@@ -4,16 +4,18 @@ import classnames from 'classnames'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
-import {getSuggestList} from '@/store/actions/search'
+import { getSuggestList } from '@/store/actions/search'
+import { RootState } from '@/store'
 
 
 const Search = () => {
   const history = useHistory()
   const [keyword, setKeyword] = useState('')
   const dispatch = useDispatch()
+  const suggestions = useSelector((state:RootState)=>state.search.suggestions)
   
   let timerRef = useRef(-1)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +31,14 @@ const Search = () => {
     return ()=> {
      window.clearTimeout(timerRef.current)
     }
-  },[])
+  }, [])
+  
+  // 让字符串中指定内容高亮
+  const hightLight = (str: string, key: string) => {
+    return str.replace(new RegExp(key, 'gi'), (match: string) => {
+      return `<span style="color:red;">${match}</span>`
+    })
+  }
 
   return (
     <div className={styles.root}>
@@ -81,13 +90,16 @@ const Search = () => {
 
       {/* 搜素建议结果列表 */}
       <div className={classnames('search-result', 'show')}>
-        <div className="result-item">
+        {suggestions.map((item, index) => {
+          return  <div className="result-item" key={index}>
           <Icon className="icon-search" type="iconbtn_search" />
-          <div className="result-value">
-            <span>{'高亮'}</span>{`其余`}
+            <div className="result-value" dangerouslySetInnerHTML={{
+            __html:hightLight(item,keyword)
+          }}>
           </div>
         </div>
-      </div>
+        })}
+       </div>
     </div>
   )
 }
