@@ -7,8 +7,9 @@ import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
-import { getSuggestList,clearSuggestions,addSearchList } from '@/store/actions/search'
+import { getSuggestList,clearSuggestions,addSearchList,clearHistories } from '@/store/actions/search'
 import { RootState } from '@/store'
+import {Dialog} from 'antd-mobile'
 
 
 const Search = () => {
@@ -63,6 +64,17 @@ const Search = () => {
     dispatch(addSearchList(key))
   }
 
+  // 清空全部历史记录
+  const onClearHistory = () => {
+    Dialog.confirm({
+      content: '您确定要清空记录吗？',
+      onConfirm: function () {
+        dispatch(clearHistories())
+        
+      }
+    })
+  }
+
   return (
     <div className={styles.root}>
       {/* 顶部导航栏 */}
@@ -90,7 +102,7 @@ const Search = () => {
       <div className="history" style={{ display: isSearching? 'none':'block' }}>
         <div className="history-header">
           <span>搜索历史</span>
-          <span>
+          <span onClick={onClearHistory}>
             <Icon type="iconbtn_del" />清除全部
           </span>
         </div>

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import { RooteThunkAction } from '@/store'
 import { SearchAction } from '../reducers/search'
-import { setLocalHistories } from '@/utils/storage'
+import { removeLocalHistories, setLocalHistories } from '@/utils/storage'
 
 type SuggestListRes = {
   options:string[]
@@ -50,5 +50,17 @@ export function addSearchList(keyword: string): RooteThunkAction{
     })
     // 保存到本地
     setLocalHistories(histories)
+  }
+}
+
+// 清空历史记录
+export const clearHistories = ():RooteThunkAction => {
+  return async dispatch => {
+    // 清空本地
+    removeLocalHistories()
+    // 清空redux
+    dispatch({
+      type:'search/clearHistories'
+    })
   }
 }
