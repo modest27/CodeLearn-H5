@@ -58,7 +58,7 @@ export default function reducer(state = initValue, action: SearchAction) {
   if (action.type === 'search/saveResults') {
     return {
       ...state,
-      result:action.payload
+      results:[...state.results,...action.payload]
     }
   }
     
