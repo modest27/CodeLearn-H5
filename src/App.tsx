@@ -9,6 +9,7 @@ const ProfileEdit = React.lazy(() => import('@/pages/Profile/Edit'))
 const ProfileChat = React.lazy(() => import('@/pages/Profile/Chat'))
 const NotFound = React.lazy(() => import('@/pages/NotFound'))
 const ProfileFeedback = React.lazy(() => import('@/pages/Profile/Feedback'))
+const Search = React.lazy(()=>import('@/pages/Search'))
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Redirect exact from="/" to="/home"></Redirect>
             <Route path="/login" component={Login}></Route>
             <Route path="/home" component={Home}></Route>
+            <Route path="/search" component={Search}></Route>
             <AuthRoute path="/profile/edit" component={ProfileEdit}></AuthRoute>
             <AuthRoute path="/profile/chat" component={ProfileChat}></AuthRoute>
             <AuthRoute path="/profile/feedback" component={ProfileFeedback}></AuthRoute>

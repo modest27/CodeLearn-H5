@@ -9,10 +9,12 @@ import Channels from './components/channels'
 import ArticleList from './components/ArticleList/idnex'
 import MoreAction from './components/MoreAction'
 import {RootState} from '@/store'
+import { useHistory } from 'react-router-dom'
 
 export default function Home() {
   const tabs = useSelector((state:RootState) => state.home.userChannels)
   const dispatch = useDispatch()
+  const history = useHistory()
   useEffect(() => {
     dispatch(getUserChannels())
     dispatch(getAllChannels())
@@ -35,7 +37,7 @@ export default function Home() {
       </Tabs>
       {/* 频道 Tab 栏右侧的两个图标按钮：搜索、频道管理 */}
       <div className="tabs-opration">
-        <Icon type="iconbtn_search" />
+        <Icon type="iconbtn_search" onClick={()=>history.push('/search')} />
         <Icon type="iconbtn_channel" onClick={() => setOpen(true)} />
       </div>
       {/* 频道管理组件 */}
