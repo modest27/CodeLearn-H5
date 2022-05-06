@@ -7,7 +7,7 @@ import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
-import { getSuggestList,clearSuggestions } from '@/store/actions/search'
+import { getSuggestList,clearSuggestions,addSearchList } from '@/store/actions/search'
 import { RootState } from '@/store'
 
 
@@ -57,6 +57,12 @@ const Search = () => {
     dispatch(clearSuggestions())
   }
 
+  // 搜索
+  const onSearch = (key:string) => {
+    console.log(key);
+    dispatch(addSearchList(key))
+  }
+
   return (
     <div className={styles.root}>
       {/* 顶部导航栏 */}
@@ -64,7 +70,7 @@ const Search = () => {
         className="navbar"
         onLeftClick={() => history.go(-1)}
         extra={
-          <span className="search-text">搜索</span>
+          <span className="search-text" onClick={()=>onSearch(keyword)}>搜索</span>
         }
       >
         <div className="navbar-search">
@@ -108,7 +114,7 @@ const Search = () => {
       {/* 搜素建议结果列表 */}
       <div className={classnames('search-result', {show:isSearching})}>
         {suggestions.map((item, index) => {
-          return  <div className="result-item" key={index}>
+          return  <div className="result-item" key={index} onClick={()=>onSearch(item)}>
           <Icon className="icon-search" type="iconbtn_search" />
             <div className="result-value" dangerouslySetInnerHTML={{
             __html:hightLight(item,keyword)

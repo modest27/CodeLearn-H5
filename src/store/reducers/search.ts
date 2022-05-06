@@ -1,5 +1,6 @@
 type SearchType = {
   suggestions:string[]
+  histories:string[]
 }
 
 export type SearchAction = {
@@ -7,11 +8,16 @@ export type SearchAction = {
   payload:string[]
 } | {
   type:'search/clearSuggestions'
+} | {
+  type: 'search/saveHistories',
+  payload:string[]
 }
 
 const initValue:SearchType = {
   // 存放推荐的结果
-  suggestions:[]
+  suggestions: [],
+  // 存放历史记录
+  histories: []
 }
 
 export default function reducer(state = initValue, action: SearchAction) {
@@ -25,6 +31,12 @@ export default function reducer(state = initValue, action: SearchAction) {
     return {
       ...state,
       suggestions:[]
+    }
+  }
+  if (action.type === 'search/saveHistories') {
+    return {
+      ...state,
+      histories:action.payload
     }
   }
     

@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 import { RooteThunkAction } from '@/store'
 import { SearchAction } from '../reducers/search'
+import { setLocalHistories } from '@/utils/storage'
 
 type SuggestListRes = {
   options:string[]
@@ -26,5 +27,22 @@ export function getSuggestList(keyword:string):RooteThunkAction {
 export function clearSuggestions():SearchAction{
   return {
     type:'search/clearSuggestions'
+  }
+}
+
+// 存储搜索记录
+export function addSearchList(keyword: string): RooteThunkAction{
+  return async (dispatch,getState) => {
+    // 获取原来的历史记录
+    let histories = getState().search.histories
+    // 添加keyword
+    histories = [keyword, ...histories]
+    // 保存到redux
+    dispatch({
+      type: 'search/saveHistories',
+      payload:histories
+    })
+    // 保存到本地
+    setLocalHistories(histories)
   }
 }
