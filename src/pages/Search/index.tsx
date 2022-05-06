@@ -1,11 +1,35 @@
 import Icon from '@/components/Icon'
 import NavBar from '@/components/NavBar'
 import classnames from 'classnames'
+import React, { useState } from 'react'
+import { useEffect } from 'react'
+import { useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
+import {getSuggestList} from '@/store/actions/search'
+
 
 const Search = () => {
   const history = useHistory()
+  const [keyword, setKeyword] = useState('')
+  const dispatch = useDispatch()
+  
+  let timerRef = useRef(-1)
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let text = e.target.value
+    setKeyword(text)
+    clearTimeout(timerRef.current)
+    timerRef.current = window.setTimeout(() => {
+      dispatch(getSuggestList(text))
+    },500)
+  }
+
+  useEffect(() => {
+    return ()=> {
+     window.clearTimeout(timerRef.current)
+    }
+  },[])
 
   return (
     <div className={styles.root}>
@@ -22,7 +46,7 @@ const Search = () => {
 
           <div className="input-wrapper">
             {/* 输入框 */}
-            <input type="text" placeholder="请输入关键字搜索" />
+            <input type="text" placeholder="请输入关键字搜索" value={keyword} onChange={onChange} />
 
             {/* 清空输入框按钮 */}
             <Icon type="iconbtn_tag_close" className="icon-close" />
