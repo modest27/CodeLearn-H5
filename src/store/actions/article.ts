@@ -27,3 +27,20 @@ export function getCommentList(id: string): RooteThunkAction{
     
   }
 }
+
+// 获取更多评论数据
+export function getMoreCommentList(id: string,offset:string): RooteThunkAction{
+  return async dispatch => {
+    const res = await request.get('/comments', {
+      params: {
+        type: 'a',
+        source: id,
+        offset
+      }
+    })
+    dispatch({
+      type: 'article/saveMoreComment',
+      payload:res.data
+    })
+  }
+}

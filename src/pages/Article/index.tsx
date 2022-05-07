@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon"
 import NavBar from "@/components/NavBar"
 import { RootState } from "@/store"
-import { getArtcileDetail,getCommentList } from "@/store/actions/article"
+import { getArtcileDetail,getCommentList,getMoreCommentList } from "@/store/actions/article"
 import classNames from "classnames"
 import dayjs from "dayjs"
 import { useEffect, useRef, useState } from "react"
@@ -14,6 +14,7 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/vs2015.css'
 import NoComment from "./components/NoComment"
 import CommentItem from "./components/CommentItem"
+import {InfiniteScroll} from 'antd-mobile'
 
 const Article = () => {
 
@@ -24,6 +25,12 @@ const Article = () => {
   // 是否显示顶部信息
   const [isShowAuthor, setIsShowAuthor] = useState(false)
   const authorRef = useRef<HTMLDivElement>(null)
+  const hasMore = comment.end_id !== comment.last_id
+  // 判断评论还有没有数据
+  const loadMore = async () => {
+    if(!hasMore) return
+   await dispatch(getMoreCommentList(id,comment.last_id))
+  }
   
   useEffect(() => {
      // 配置 highlight.js
@@ -154,6 +161,7 @@ const Article = () => {
                   {detail.comm_count === 0 ? <NoComment></NoComment> : comment.results?.map(item => {
                     return <CommentItem key={item.com_id} comment={item}></CommentItem>
                   })}
+                  <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
             </div>
           </>

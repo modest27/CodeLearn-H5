@@ -45,6 +45,9 @@ export type ArticleAction = {
 } | {
   type: 'article/saveComment',
   payload:CommentType
+} | {
+  type: 'article/saveMoreComment',
+  payload:CommentType
 }
 
 const initValue:ArticleType = {
@@ -65,6 +68,15 @@ export default function article(state = initValue, action: ArticleAction) {
     return {
       ...state,
       comment:action.payload
+    }
+  }
+  if (action.type === 'article/saveMoreComment') {
+    return {
+      ...state,
+      comment: {
+        ...action.payload,
+        results:[...state.comment.results,...action.payload.results]
+      }
     }
   }
   return state
