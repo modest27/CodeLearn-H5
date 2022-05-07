@@ -10,7 +10,8 @@ const ProfileChat = React.lazy(() => import('@/pages/Profile/Chat'))
 const NotFound = React.lazy(() => import('@/pages/NotFound'))
 const ProfileFeedback = React.lazy(() => import('@/pages/Profile/Feedback'))
 const Search = React.lazy(() => import('@/pages/Search'))
-const SearchResult = React.lazy(()=>import('@/pages/Search/Result'))
+const SearchResult = React.lazy(() => import('@/pages/Search/Result'))
+const Article = React.lazy(()=>import('@/pages/Article'))
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/home" component={Home}></Route>
             <Route path="/search" exact component={Search}></Route>
             <Route path="/search/result" exact component={SearchResult}></Route>
+            <Route path="/article/:id" exact component={Article}></Route>
             <AuthRoute path="/profile/edit" component={ProfileEdit}></AuthRoute>
             <AuthRoute path="/profile/chat" component={ProfileChat}></AuthRoute>
             <AuthRoute path="/profile/feedback" component={ProfileFeedback}></AuthRoute>

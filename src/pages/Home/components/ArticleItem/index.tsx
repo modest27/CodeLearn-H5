@@ -7,6 +7,7 @@ import styles from './index.module.scss'
 import Img from '@/components/Img'
 import { useSelector } from 'react-redux'
 import {RootState} from '@/store'
+import { useHistory } from 'react-router-dom'
 
 
 dayjs.locale('zh-cn')
@@ -31,10 +32,12 @@ const ArticleItem = ({ article }:any) => {
     pubdate
   } = article
 
-  const isLogin = useSelector((state:RootState) => !!state.login.token)
+  const isLogin = useSelector((state: RootState) => !!state.login.token)
+  
+  const history = useHistory()
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} onClick={()=>history.push('/article/'+article.art_id)}>
       <div className={classnames('article-content', type === 0 ? 'none-mt' : '', type === 3 ? 't3' : '')}>
         {/* 标题 */}
         <h3>{title}</h3>
