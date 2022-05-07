@@ -1,19 +1,64 @@
 import Icon from "@/components/Icon"
 import NavBar from "@/components/NavBar"
+import { RootState } from "@/store"
 import { getArtcileDetail } from "@/store/actions/article"
-import { useEffect } from "react"
+import classNames from "classnames"
+import dayjs from "dayjs"
+import { useEffect, useRef, useState } from "react"
 import ContentLoader from "react-content-loader"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useParams } from "react-router-dom"
 import styles from './index.module.scss'
+import DOMPurify from 'dompurify'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/vs2015.css'
 
 const Article = () => {
+
   const history = useHistory()
   const { id } = useParams<{ id: string }>()
   const dispatch = useDispatch()
+  const { detail } = useSelector((state: RootState) => state.article)
+  // 是否显示顶部信息
+  const [isShowAuthor, setIsShowAuthor] = useState(false)
+  const authorRef = useRef<HTMLDivElement>(null)
+  
+  useEffect(() => {
+     // 配置 highlight.js
+  hljs.configure({
+    // 忽略未经转义的 HTML 字符
+    ignoreUnescapedHTML: true
+  })
+
+    // 获取所有code标签
+    const codes = document.querySelectorAll('.dg-html code')
+    codes.forEach(el => {
+      hljs.highlightElement(el as HTMLElement)
+    })
+  },[detail])
+
   useEffect(() => {
     dispatch(getArtcileDetail(id))
-  },[dispatch,id])
+  }, [dispatch, id])
+
+  useEffect(() => {
+    const onScroll = () => {
+      const rect = authorRef.current?.getBoundingClientRect()!
+     
+      if (rect.top <= 0) {
+        setIsShowAuthor(true)
+      } else {
+        setIsShowAuthor(false)
+      }
+      
+    }
+
+    document.addEventListener('scroll', onScroll)
+    return () => {
+      document.removeEventListener('scroll',onScroll)
+    }
+  },[])
+  
 
   return (
     <div className={styles.root}>
@@ -21,6 +66,7 @@ const Article = () => {
 
         {/* 顶部导航栏 */}
         <NavBar
+          className='navBar'
           onLeftClick={() => history.go(-1)}
           extra={
             <span>
@@ -28,7 +74,13 @@ const Article = () => {
             </span>
           }
         >
-         哈哈哈
+      {isShowAuthor?   <div className="nav-author">
+    <img src={detail.aut_photo} alt="" />
+    <span className="name">{detail.aut_name}</span>
+    <span className={classNames('follow', detail.is_followed ? 'followed' : '')}>
+      {detail.is_followed ? '已关注' : '关注'}
+    </span>
+  </div>:''}
         </NavBar>
 
         {false ? (
@@ -62,25 +114,25 @@ const Article = () => {
 
                 {/* 文章描述信息栏 */}
                 <div className="header">
-                  <h1 className="title">{"测试文字1234"}</h1>
+                  <h1 className="title">{detail.title}</h1>
 
                   <div className="info">
-                    <span>{'2020-10-10'}</span>
-                    <span>{10} 阅读</span>
-                    <span>{10} 评论</span>
+                    <span>{detail.pubdate}</span>
+                    <span>{detail.read_count} 阅读</span>
+                    <span>{detail.comm_count} 评论</span>
                   </div>
 
-                  <div className="author">
-                    <img src={''} alt="" />
-                    <span className="name">{'张三'}</span>
-                    <span className="follow">关注</span>
+                  <div className="author" ref={authorRef}>
+                    <img src={detail.aut_photo} alt="" />
+                    <span className="name">{detail.aut_name}</span>
+                      <span className={classNames('follow',{followed:detail.is_followed})}>{ detail.is_followed? '已关注':'关注' }</span>
                   </div>
                 </div>
 
                 {/* 文章正文内容区域 */}
                 <div className="content">
-                  <div className="content-html dg-html">测试内容123</div>
-                  <div className="date">发布文章时间：{'2020-10-10'}</div>
+                  <div className="content-html dg-html" dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(detail.content)}}></div>
+                  <div className="date">发布文章时间：{dayjs(detail.pubdate).format('YYYY-MM-DD')}</div>
                 </div>
 
               </div>
