@@ -1,8 +1,6 @@
 import Icon from '@/components/Icon'
 import classnames from 'classnames'
 import dayjs from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './index.module.scss'
 import Img from '@/components/Img'
 import { useSelector } from 'react-redux'
@@ -10,8 +8,7 @@ import {RootState} from '@/store'
 import { useHistory } from 'react-router-dom'
 
 
-dayjs.locale('zh-cn')
-dayjs.extend(relativeTime)
+
 
 /**
  * 文章列表项组件

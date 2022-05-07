@@ -13,13 +13,14 @@ import DOMPurify from 'dompurify'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/vs2015.css'
 import NoComment from "./components/NoComment"
+import CommentItem from "./components/CommentItem"
 
 const Article = () => {
 
   const history = useHistory()
   const { id } = useParams<{ id: string }>()
   const dispatch = useDispatch()
-  const { detail } = useSelector((state: RootState) => state.article)
+  const { detail,comment } = useSelector((state: RootState) => state.article)
   // 是否显示顶部信息
   const [isShowAuthor, setIsShowAuthor] = useState(false)
   const authorRef = useRef<HTMLDivElement>(null)
@@ -142,7 +143,18 @@ const Article = () => {
                 </div>
 
                 </div>
-                <NoComment></NoComment>
+                
+              {/* 文章评论区 */}
+           <div className="comment">
+                 {/* 评论总览信息 */}
+          <div className="comment-header">
+            <span>全部评论（{detail.comm_count}）</span>
+            <span>{detail.like_count} 点赞</span>
+          </div>
+                  {detail.comm_count === 0 ? <NoComment></NoComment> : comment.results?.map(item => {
+                    return <CommentItem key={item.com_id} comment={item}></CommentItem>
+                  })}
+                  </div>
             </div>
           </>
         )}
