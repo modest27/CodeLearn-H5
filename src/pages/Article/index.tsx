@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon"
 import NavBar from "@/components/NavBar"
 import { RootState } from "@/store"
-import { getArtcileDetail } from "@/store/actions/article"
+import { getArtcileDetail,getCommentList } from "@/store/actions/article"
 import classNames from "classnames"
 import dayjs from "dayjs"
 import { useEffect, useRef, useState } from "react"
@@ -12,6 +12,7 @@ import styles from './index.module.scss'
 import DOMPurify from 'dompurify'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/vs2015.css'
+import NoComment from "./components/NoComment"
 
 const Article = () => {
 
@@ -57,7 +58,12 @@ const Article = () => {
     return () => {
       document.removeEventListener('scroll',onScroll)
     }
-  },[])
+  }, [])
+  
+  // 发送请求-获取评论数据
+  useEffect(() => {
+    dispatch(getCommentList(id))
+  },[dispatch,id])
   
 
   return (
@@ -135,7 +141,8 @@ const Article = () => {
                   <div className="date">发布文章时间：{dayjs(detail.pubdate).format('YYYY-MM-DD')}</div>
                 </div>
 
-              </div>
+                </div>
+                <NoComment></NoComment>
             </div>
           </>
         )}
