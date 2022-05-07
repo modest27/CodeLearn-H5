@@ -15,6 +15,7 @@ import 'highlight.js/styles/vs2015.css'
 import NoComment from "./components/NoComment"
 import CommentItem from "./components/CommentItem"
 import {InfiniteScroll} from 'antd-mobile'
+import CommentFooter from "./components/CommentFooter"
 
 const Article = () => {
 
@@ -163,7 +164,8 @@ const Article = () => {
                   })}
                   <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
-            </div>
+              </div>
+              <CommentFooter></CommentFooter>
           </>
         )}
       </div>
