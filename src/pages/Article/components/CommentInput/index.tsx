@@ -15,9 +15,11 @@ import styles from './index.module.scss'
 
 type Props = {
   onClose: () => void
-  articleId:string
+  articleId: string
+  name?: string
+  onAddReply?:(content:string)=>void
 }
-const CommentInput = ({ onClose,articleId }:Props) => {
+const CommentInput = ({ onClose,articleId,name,onAddReply }:Props) => {
   // 输入框内容
   const [value, setValue] = useState('')
 
@@ -34,11 +36,17 @@ const CommentInput = ({ onClose,articleId }:Props) => {
   // 发表评论
   const dispatch = useDispatch()
   const onSendComment = async () => {
-    if(!value) return
-    // 发表评论
+    if (!value) return
+    // 判断是回复还是评论
+    if (name) {
+      onAddReply && onAddReply(value)
+    } else {
+        // 发表评论
     await dispatch(addComment(articleId, value))
     setValue('')
     Toast.show({icon:'success',content:'发表成功',duration:1000})
+    }
+  
     onClose()
   }
 
@@ -52,10 +60,12 @@ const CommentInput = ({ onClose,articleId }:Props) => {
           <span className="publish" onClick={onSendComment}>发表</span>
         }
       >
-        {true ? '回复评论' : '评论文章'}
+        {name ? '回复评论' : '评论文章'}
       </NavBar>
 
       <div className="input-area">
+         {/* 回复别人的评论时显示：@某某 */}
+         {name && <div className="at">@{name}:</div>}
       
         {/* 评论内容输入框 */}
         <textarea
