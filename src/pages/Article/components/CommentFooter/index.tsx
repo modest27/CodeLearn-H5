@@ -18,9 +18,10 @@ import styles from './index.module.scss'
  * @param {String} props.type  评论类型：normal 普通评论 | reply 回复评论
  */
 type Props = {
-  goComment?:()=>void
+  goComment?: () => void
+  onShare?:()=>void
 }
-const CommentFooter = ({goComment}:Props) => {
+const CommentFooter = ({goComment,onShare}:Props) => {
   const { detail } = useSelector((state: RootState) => state.article)
   const dispatch = useDispatch()
   const onLike = async () => {
@@ -62,7 +63,7 @@ const CommentFooter = ({goComment}:Props) => {
       </div>
 
       {/* 分享按钮 */}
-      <div className="action-item" >
+      <div className="action-item" onClick={onShare}>
         <Icon type="iconbtn_share" />
         <p>分享</p>
       </div>

@@ -14,9 +14,10 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/vs2015.css'
 import NoComment from "./components/NoComment"
 import CommentItem from "./components/CommentItem"
-import {InfiniteScroll} from 'antd-mobile'
+import {InfiniteScroll, Popup} from 'antd-mobile'
 import CommentFooter from "./components/CommentFooter"
 import Sticky from "@/components/Sticky"
+import Share from "./components/Share"
 
 const Article = () => {
 
@@ -34,6 +35,9 @@ const Article = () => {
     if(!hasMore) return
    await dispatch(getMoreCommentList(id,comment.last_id))
   }
+
+  // 分享弹层
+  const [share,setShare] = useState(false)
   
   useEffect(() => {
      // 配置 highlight.js
@@ -179,11 +183,19 @@ const Article = () => {
                   <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
               </div>
-              <CommentFooter goComment={goComment}></CommentFooter>
+              <CommentFooter goComment={goComment} onShare={()=>setShare(true)}></CommentFooter>
           </>
         )}
       </div>
-
+      <Popup
+              visible={share}
+              onMaskClick={() => {
+                setShare(false)
+              }}
+              bodyStyle={{ height: '44vh' }}
+            >
+              <Share onClose={()=>setShare(false)}></Share>
+            </Popup>
     </div>
   )
 }
