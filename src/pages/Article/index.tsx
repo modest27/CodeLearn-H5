@@ -18,6 +18,7 @@ import {InfiniteScroll, Popup} from 'antd-mobile'
 import CommentFooter from "./components/CommentFooter"
 import Sticky from "@/components/Sticky"
 import Share from "./components/Share"
+import CommentInput from "./components/CommentInput"
 
 const Article = () => {
 
@@ -37,7 +38,17 @@ const Article = () => {
   }
 
   // 分享弹层
-  const [share,setShare] = useState(false)
+  const [share, setShare] = useState(false)
+  
+  // 评论弹层
+  const [showComment, setShowComment] = useState({
+    visible:false
+  })
+  const closeComment = () => {
+    setShowComment({
+      visible:false
+    })
+  }
   
   useEffect(() => {
      // 配置 highlight.js
@@ -90,6 +101,9 @@ const Article = () => {
     }
     isShowComment.current = !isShowComment.current
   }
+
+  
+  
 
   return (
     <div className={styles.root}>
@@ -183,10 +197,11 @@ const Article = () => {
                   <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
               </div>
-              <CommentFooter goComment={goComment} onShare={()=>setShare(true)}></CommentFooter>
+              <CommentFooter goComment={goComment} onShare={() => setShare(true)} onShowComment={()=>setShowComment({visible:true})}></CommentFooter>
           </>
         )}
       </div>
+      {/* 分享的弹层 */}
       <Popup
               visible={share}
               onMaskClick={() => {
@@ -195,7 +210,17 @@ const Article = () => {
               bodyStyle={{ height: '44vh' }}
             >
               <Share onClose={()=>setShare(false)}></Share>
-            </Popup>
+      </Popup>
+      {/* 添加评论的弹层 */}
+      <Popup
+              visible={showComment.visible}
+              // onMaskClick={() => {
+              //   setShare(false)
+              // }}
+              bodyStyle={{ height: '100vh' }}
+            >
+              <CommentInput onClose={closeComment} articleId={detail.art_id}></CommentInput>
+      </Popup>
     </div>
   )
 }

@@ -19,9 +19,10 @@ import styles from './index.module.scss'
  */
 type Props = {
   goComment?: () => void
-  onShare?:()=>void
+  onShare?: () => void
+  onShowComment?:()=>void
 }
-const CommentFooter = ({goComment,onShare}:Props) => {
+const CommentFooter = ({goComment,onShare,onShowComment}:Props) => {
   const { detail } = useSelector((state: RootState) => state.article)
   const dispatch = useDispatch()
   const onLike = async () => {
@@ -34,7 +35,7 @@ const CommentFooter = ({goComment,onShare}:Props) => {
   return (
     <div className={styles.root}>
       {/* 输入框（是个假的输入框，其实就是个按钮） */}
-      <div className="input-btn" >
+      <div className="input-btn" onClick={onShowComment}>
         <Icon type="iconbianji" />
         <span>{'去评论'}</span>
       </div>

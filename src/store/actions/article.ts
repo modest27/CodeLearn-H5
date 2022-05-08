@@ -82,3 +82,19 @@ export function collectArticle(id: string, is_collected: boolean): RooteThunkAct
     await dispatch(getArtcileDetail(id))
   }
 }
+
+// 发表评论
+export function addComment(articleId: string, content: string): RooteThunkAction{
+  return async dispatch => {
+   const res = await request.post('/comments', {
+      target: articleId,
+      content
+     })
+    dispatch({
+      type: 'article/saveNewComment',
+      payload:res.data.new_obj
+    })
+     // 更新
+     await dispatch(getArtcileDetail(articleId))
+  }
+}
