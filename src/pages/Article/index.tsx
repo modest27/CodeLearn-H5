@@ -19,6 +19,8 @@ import CommentFooter from "./components/CommentFooter"
 import Sticky from "@/components/Sticky"
 import Share from "./components/Share"
 import CommentInput from "./components/CommentInput"
+import CommentReply from "./components/CommentReply"
+import { Comment } from "@/store/reducers/article"
 
 const Article = () => {
 
@@ -47,6 +49,27 @@ const Article = () => {
   const closeComment = () => {
     setShowComment({
       visible:false
+    })
+  }
+
+  // 回复评论
+  const [showReply,setShowReply] = useState({
+    visible: false,
+    // 原始评论
+    originComment:{} as Comment
+  })
+
+  const closeReply = () => {
+    setShowReply({
+      visible: false,
+      originComment:{} as Comment
+    })
+  }
+
+  const onShowReply = (comment:Comment) => {
+    setShowReply({
+      visible: true,
+      originComment:comment
     })
   }
   
@@ -192,7 +215,7 @@ const Article = () => {
                     </div>}
                   </Sticky>
                   {detail.comm_count === 0 ? <NoComment></NoComment> : comment.results?.map(item => {
-                    return <CommentItem key={item.com_id} comment={item}></CommentItem>
+                    return <CommentItem key={item.com_id} comment={item} onReply={onShowReply}></CommentItem>
                   })}
                   <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
@@ -220,6 +243,14 @@ const Article = () => {
               bodyStyle={{ height: '100vh' }}
             >
               <CommentInput onClose={closeComment} articleId={detail.art_id}></CommentInput>
+      </Popup>
+        {/* 回复评论的弹层 */}
+        <Popup
+              visible={showReply.visible}
+              bodyStyle={{ height: '100vh',width:'100vw' }}
+              position='right'
+            >
+              <CommentReply onClose={closeReply} articleId={detail.art_id} originComment={showReply.originComment}></CommentReply>
       </Popup>
     </div>
   )

@@ -21,9 +21,10 @@ import styles from './index.module.scss'
  */
 
 type Props = {
-  comment:Comment
+  comment: Comment
+  onReply?:(comment:Comment)=>void
 }
-const CommentItem = ({comment}:Props) => {
+const CommentItem = ({comment,onReply}:Props) => {
   return (
     <div className={styles.root}>
 
@@ -55,11 +56,11 @@ const CommentItem = ({comment}:Props) => {
 
         <div className="comment-footer">
           {/* 回复按钮 */}
-          {comment.reply_count !== 0 && (
-            <span className="replay" >
-              {comment.reply_count}回复 <Icon type="iconbtn_right" />
+          { 
+            <span className="replay" onClick={()=>onReply&&onReply(comment)} >
+              {comment.reply_count} 回复<Icon type="iconbtn_right" />
             </span>
-          )}
+          }
 
           {/* 评论日期 */}
           <span className="comment-time">{dayjs(comment.pubdate).fromNow()}</span>

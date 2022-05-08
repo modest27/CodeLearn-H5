@@ -1,7 +1,6 @@
 import NavBar from '@/components/NavBar'
 import { addComment } from '@/store/actions/article'
 import { Toast } from 'antd-mobile'
-// import { http } from '@/utils'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styles from './index.module.scss'
