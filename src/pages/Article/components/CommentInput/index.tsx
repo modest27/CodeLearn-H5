@@ -39,7 +39,10 @@ const CommentInput = ({ onClose,articleId,name,onAddReply }:Props) => {
     if (!value) return
     // 判断是回复还是评论
     if (name) {
+      // 回复
       onAddReply && onAddReply(value)
+      setValue('')
+    Toast.show({icon:'success',content:'回复成功',duration:1000})
     } else {
         // 发表评论
     await dispatch(addComment(articleId, value))

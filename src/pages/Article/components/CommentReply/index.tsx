@@ -1,9 +1,11 @@
 import NavBar from '@/components/NavBar'
 import NoComment from '@/pages/Article/components/NoComment'
+import { updateComment } from '@/store/actions/article'
 import { Comment } from '@/store/reducers/article'
 import  request  from '@/utils/request'
 import { InfiniteScroll, Popup } from 'antd-mobile'
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import CommentFooter from '../CommentFooter'
 import CommentInput from '../CommentInput'
 import CommentItem from '../CommentItem'
@@ -21,6 +23,7 @@ type Props = {
   originComment:Comment
 }
 const CommentReply = ({ articleId, onClose, originComment }: Props) => {
+  const dispatch = useDispatch()
   const [replyList,setReplyList] = useState({
     end_id: '',
     last_id: '',
@@ -29,6 +32,8 @@ const CommentReply = ({ articleId, onClose, originComment }: Props) => {
   })
   //获取文章回复列表
   useEffect(() => {
+    
+    
     const fetchData = async () => {
       const res = await request.get('/comments', {
         params: {
@@ -38,7 +43,10 @@ const CommentReply = ({ articleId, onClose, originComment }: Props) => {
       })
       setReplyList(res.data)
     }
-    fetchData()
+    if (originComment.com_id !== undefined) {
+        fetchData()
+   }
+  
   },[originComment])
 
   const hasMore = replyList.end_id !== replyList.last_id
@@ -73,9 +81,15 @@ const CommentReply = ({ articleId, onClose, originComment }: Props) => {
     })
     setReplyList({
       ...replyList,
+      total_count:replyList.total_count+1,
       results:[res.data.new_obj,...replyList.results]
     })
-      
+      // 更新回复数量
+      dispatch(updateComment({
+        ...originComment,
+        reply_count: originComment.reply_count + 1
+      }))
+   
   }
 
   return (
@@ -84,7 +98,7 @@ const CommentReply = ({ articleId, onClose, originComment }: Props) => {
 
         {/* 顶部导航栏 */}
         <NavBar className="transparent-navbar" onLeftClick={onClose}>
-          <div>{originComment.reply_count}条回复</div>
+          <div>{replyList.total_count}条回复</div>
         </NavBar>
 
         {/* 原评论信息 */}

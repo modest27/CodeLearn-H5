@@ -1,6 +1,8 @@
 import { RooteThunkAction } from "..";
 import request from '@/utils/request'
 import { Toast } from 'antd-mobile'
+import { ArticleAction, Comment } from "../reducers/article";
+
 
 
 export function getArtcileDetail(id:string): RooteThunkAction{
@@ -96,5 +98,13 @@ export function addComment(articleId: string, content: string): RooteThunkAction
     })
      // 更新
      await dispatch(getArtcileDetail(articleId))
+  }
+}
+
+// 更新回复
+export function updateComment(comment: Comment):ArticleAction{
+  return {
+    type: 'article/updateComment',
+    payload: comment 
   }
 }

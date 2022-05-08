@@ -51,6 +51,9 @@ export type ArticleAction = {
 } | {
   type: 'article/saveNewComment',
   payload:Comment
+} | {
+  type: 'article/updateComment',
+  payload:Comment
 }
 
 const initValue:ArticleType = {
@@ -88,6 +91,24 @@ export default function article(state = initValue, action: ArticleAction) {
       comment: {
         ...state.comment,
         results:[action.payload,...state.comment.results]
+      }
+    }
+  }
+  if (action.type === 'article/updateComment') {
+    return {
+      ...state,
+      comment: {
+        ...state.comment,
+        results: state.comment.results.map(item => {
+          if (item.com_id === action.payload.com_id) {
+            return {
+              ...action.payload
+            }
+          } else {
+            return item
+          }
+        })
+
       }
     }
   }
