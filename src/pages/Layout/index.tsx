@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 import { Switch, Route } from 'react-router-dom'
 import AuthRoute from '@/components/AuthRoute'
+import KeepAlive from '@/components/KeepAlive'
 
 const Home = lazy(() => import('@/pages/Home'))
 const QA = lazy(() => import('@/pages/QA'))
@@ -15,7 +16,7 @@ const tabBar = [
   {
     title: '首页',
     icon: 'iconbtn_home',
-    path: '/home'
+    path: '/home/index'
   },
   {
     title: '问答',
@@ -43,8 +44,9 @@ export default function Layout() {
       <div className="tab-content">
         {/* 配置二级路由 */}
         <Suspense fallback={<div>loading...</div>}>
+          <KeepAlive alivePath="/home/index" path="/home/index" exact component={Home}></KeepAlive>
           <Switch>
-            <Route exact path="/home" component={Home}></Route>
+            {/* <Route exact path="/home" component={Home}></Route> */}
             <Route path="/home/qa" component={QA}></Route>
             <Route path="/home/video" component={Video}></Route>
             <AuthRoute path="/home/profile" component={Profile}></AuthRoute>

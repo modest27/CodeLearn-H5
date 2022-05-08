@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import AuthRoute from '@/components/AuthRoute'
 import history from './utils/history'
+import KeepAlive from './components/KeepAlive'
 
 const Login = React.lazy(() => import('@/pages/Login'))
 const Home = React.lazy(() => import('@/pages/Layout'))
@@ -18,10 +19,11 @@ export default function App() {
     <Router history={history}>
       <div className="app">
         <Suspense fallback={<div>loading...</div>}>
+        <KeepAlive alivePath="/home" path="/home" component={Home}  />
           <Switch>
-            <Redirect exact from="/" to="/home"></Redirect>
+            <Redirect exact from="/" to="/home/index"></Redirect>
             <Route path="/login" component={Login}></Route>
-            <Route path="/home" component={Home}></Route>
+            {/* <Route path="/home" component={Home}></Route> */}
             <Route path="/search" exact component={Search}></Route>
             <Route path="/search/result" exact component={SearchResult}></Route>
             <Route path="/article/:id" exact component={Article}></Route>
@@ -29,7 +31,11 @@ export default function App() {
             <AuthRoute path="/profile/chat" component={ProfileChat}></AuthRoute>
             <AuthRoute path="/profile/feedback" component={ProfileFeedback}></AuthRoute>
             {/* 404页面 */}
-            <Route component={NotFound}></Route>
+            <Route render={(props) => {
+               if (!props.location.pathname.startsWith('/home')) {
+                return <NotFound />
+              }
+            }}></Route>
           </Switch>
         </Suspense>
       </div>

@@ -16,7 +16,7 @@ export default function NotFound() {
       })
       if (timeRef.current === 0) {
         clearInterval(timer)
-        history.push('/home')
+        history.push('/home/index')
       }
     }, 1000)
   }, [history])
