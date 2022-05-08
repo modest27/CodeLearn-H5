@@ -20,9 +20,10 @@ import styles from './index.module.scss'
 type Props = {
   goComment?: () => void
   onShare?: () => void
-  onShowComment?:()=>void
+  onShowComment?: () => void
+  type?:string
 }
-const CommentFooter = ({goComment,onShare,onShowComment}:Props) => {
+const CommentFooter = ({goComment,onShare,onShowComment,type='normal'}:Props) => {
   const { detail } = useSelector((state: RootState) => state.article)
   const dispatch = useDispatch()
   const onLike = async () => {
@@ -40,7 +41,7 @@ const CommentFooter = ({goComment,onShare,onShowComment}:Props) => {
         <span>{'去评论'}</span>
       </div>
 
-      {true && (
+      {type === 'normal' && (
         <>
           {/* 评论按钮 */}
           <div className="action-item" onClick={goComment}>

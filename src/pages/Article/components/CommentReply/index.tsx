@@ -1,6 +1,9 @@
 import NavBar from '@/components/NavBar'
 import NoComment from '@/pages/Article/components/NoComment'
 import { Comment } from '@/store/reducers/article'
+import  request  from '@/utils/request'
+import { InfiniteScroll } from 'antd-mobile'
+import { useEffect, useState } from 'react'
 import CommentFooter from '../CommentFooter'
 import CommentItem from '../CommentItem'
 import styles from './index.module.scss'
@@ -16,8 +19,41 @@ type Props = {
   onClose?: () => void
   originComment:Comment
 }
-const CommentReply = ({ articleId, onClose,originComment }:Props) => {
+const CommentReply = ({ articleId, onClose, originComment }: Props) => {
+  const [replyList,setReplyList] = useState({
+    end_id: '',
+    last_id: '',
+    results: [] as Comment[],
+    total_count: 0
+  })
+  //获取文章回复列表
+  useEffect(() => {
+    const fetchData =async () => {
+      const res = await request.get('/comments', {
+        params: {
+          type: 'c',
+          source:originComment.com_id
+        }
+      })
+      setReplyList(res.data)
+    }
+    fetchData()
+  },[originComment.com_id])
 
+  const hasMore = replyList.end_id !== replyList.last_id
+  const loadMore = async () => {
+    const res = await request.get('/comments', {
+      params: {
+        type: 'c',
+        source: originComment.com_id,
+        offset:replyList.last_id
+      }
+    })
+    setReplyList({
+      ...res.data,
+      results:[...replyList.results,...res.data.results]
+    })
+  }
 
   return (
     <div className={styles.root}>
@@ -30,21 +66,23 @@ const CommentReply = ({ articleId, onClose,originComment }:Props) => {
 
         {/* 原评论信息 */}
         <div className="origin-comment">
-          <CommentItem comment={originComment} ></CommentItem>
+          <CommentItem comment={originComment} type='reply'></CommentItem>
         </div>
 
         {/* 回复评论的列表 */}
         <div className="reply-list">
           <div className="reply-header">全部回复</div>
-
+          {replyList.total_count === 0 ? <NoComment /> : (replyList.results.map(item => {
+             return <CommentItem comment={item} key={item.aut_id} type='reply'></CommentItem>
+            }))}
          
-            <NoComment />
-       
+            
+       <InfiniteScroll loadMore={loadMore} hasMore={hasMore}></InfiniteScroll>
         </div>
 
         {/* 评论工具栏，设置 type="reply" 不显示评论和点赞按钮 */}
         <CommentFooter
-        
+        type='reply'
         />
       </div>
 

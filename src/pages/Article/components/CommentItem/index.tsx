@@ -22,9 +22,10 @@ import styles from './index.module.scss'
 
 type Props = {
   comment: Comment
-  onReply?:(comment:Comment)=>void
+  onReply?: (comment: Comment) => void
+  type?:string
 }
-const CommentItem = ({comment,onReply}:Props) => {
+const CommentItem = ({comment,onReply,type='normal'}:Props) => {
   return (
     <div className={styles.root}>
 
@@ -57,9 +58,9 @@ const CommentItem = ({comment,onReply}:Props) => {
         <div className="comment-footer">
           {/* 回复按钮 */}
           { 
-            <span className="replay" onClick={()=>onReply&&onReply(comment)} >
-              {comment.reply_count} 回复<Icon type="iconbtn_right" />
-            </span>
+           type === 'reply' ? null : <span className="replay" onClick={()=>onReply&&onReply(comment)} >
+           {comment.reply_count} 回复<Icon type="iconbtn_right" />
+         </span>
           }
 
           {/* 评论日期 */}

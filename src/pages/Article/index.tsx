@@ -220,7 +220,7 @@ const Article = () => {
                   <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
               </div>
-              <CommentFooter goComment={goComment} onShare={() => setShare(true)} onShowComment={()=>setShowComment({visible:true})}></CommentFooter>
+              <CommentFooter  goComment={goComment} onShare={() => setShare(true)} onShowComment={()=>setShowComment({visible:true})}></CommentFooter>
           </>
         )}
       </div>
