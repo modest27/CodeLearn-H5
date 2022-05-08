@@ -17,7 +17,10 @@ import styles from './index.module.scss'
  * @param {Function} props.onShare 点击”分享”按钮的回调函数
  * @param {String} props.type  评论类型：normal 普通评论 | reply 回复评论
  */
-const CommentFooter = () => {
+type Props = {
+  goComment?:()=>void
+}
+const CommentFooter = ({goComment}:Props) => {
   const { detail } = useSelector((state: RootState) => state.article)
   const dispatch = useDispatch()
   const onLike = async () => {
@@ -38,7 +41,7 @@ const CommentFooter = () => {
       {true && (
         <>
           {/* 评论按钮 */}
-          <div className="action-item">
+          <div className="action-item" onClick={goComment}>
             <Icon type="iconbtn_comment" />
             <p>评论</p>
             {true && <span className="bage">{detail.comm_count}</span>}

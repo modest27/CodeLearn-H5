@@ -16,6 +16,7 @@ import NoComment from "./components/NoComment"
 import CommentItem from "./components/CommentItem"
 import {InfiniteScroll} from 'antd-mobile'
 import CommentFooter from "./components/CommentFooter"
+import Sticky from "@/components/Sticky"
 
 const Article = () => {
 
@@ -26,6 +27,7 @@ const Article = () => {
   // 是否显示顶部信息
   const [isShowAuthor, setIsShowAuthor] = useState(false)
   const authorRef = useRef<HTMLDivElement>(null)
+  const commentRef = useRef<HTMLDivElement>(null)
   const hasMore = comment.end_id !== comment.last_id
   // 判断评论还有没有数据
   const loadMore = async () => {
@@ -41,7 +43,7 @@ const Article = () => {
   })
 
     // 获取所有code标签
-    const codes = document.querySelectorAll('.dg-html code')
+    const codes = document.querySelectorAll('.dg-html pre > code')
     codes.forEach(el => {
       hljs.highlightElement(el as HTMLElement)
     })
@@ -74,6 +76,16 @@ const Article = () => {
     dispatch(getCommentList(id))
   },[dispatch,id])
   
+  // 跳转到评论处
+  const isShowComment = useRef(false)
+  const goComment = () => {
+    if (isShowComment.current) {
+      window.scrollTo(0,0)
+    } else {
+      window.scrollTo(0,commentRef.current!.offsetTop)
+    }
+    isShowComment.current = !isShowComment.current
+  }
 
   return (
     <div className={styles.root}>
@@ -155,17 +167,19 @@ const Article = () => {
               {/* 文章评论区 */}
            <div className="comment">
                  {/* 评论总览信息 */}
-          <div className="comment-header">
-            <span>全部评论（{detail.comm_count}）</span>
-            <span>{detail.like_count} 点赞</span>
-          </div>
+                  <Sticky top={46}>
+                    {<div className="comment-header" ref={commentRef}>
+                    <span>全部评论（{detail.comm_count}）</span>
+                    <span>{detail.like_count} 点赞</span>
+                    </div>}
+                  </Sticky>
                   {detail.comm_count === 0 ? <NoComment></NoComment> : comment.results?.map(item => {
                     return <CommentItem key={item.com_id} comment={item}></CommentItem>
                   })}
                   <InfiniteScroll hasMore={hasMore} loadMore={loadMore}></InfiniteScroll>
                   </div>
               </div>
-              <CommentFooter></CommentFooter>
+              <CommentFooter goComment={goComment}></CommentFooter>
           </>
         )}
       </div>
